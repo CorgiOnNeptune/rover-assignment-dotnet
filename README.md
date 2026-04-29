@@ -84,6 +84,7 @@ Probably some sort of dependency injection on the business logic side so I can p
 
 #### Project Structure
 
+```
 .
 ├── RoverSolution/
 │   ├── Rover.Web/
@@ -103,6 +104,7 @@ Probably some sort of dependency injection on the business logic side so I can p
 ├── docs/
 │   └── ...
 └── README.md
+```
 
 #### Request Flow
 
