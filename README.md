@@ -10,19 +10,15 @@ TODO: Include concrete instructions to run the project locally on a new machine/
 
 ### The Rover Problem and Algorithm
 
-#### The algorithm
+#### The "algorithm"
 
-TODO: Decide on best approach to actually looping through and handling commands given to rover(s) in a request.
+The algorithm isn't very complicated for this problem. A simple loop through the provided commands and mapping each command via a service to handle the input and each instruction will invoke the appropriate `IRoverCommand` derived class and `Execute()` method to manipulate the rover's position. We'll push the history of the rover's movement to some sort of RoverHistory to track along the frontend visualization later and at the end we'll print out the rover's final position.
+
+Main things to be aware of are accounting for the bounds of the current plateau as well as the rover's current position and direction to make sure it doesn't leave the bounds. If a `M` command would drive the rover out of the bounds of the plateau we'll simply ignore that command, but allow any turning commands regardless of the rover's position.
 
 #### OOP
 
-TODO: Plan out models and the actual OO approach to the problem.
-
-#### Design Decisions (Design Pattern for the "business logic")
-
-TODO: Notes about approaches to the design of the data structures and models. Thinking some sort of strategy pattern at first, but maybe a bit overkill for processing the commands. Maybe a small factory or command pattern? Little more thought needed.
-
-Probably some sort of dependency injection on the business logic side so I can pass some sort of command or simulation service onto the API.
+I'm approaching this with a sort of simplified Command design pattern after initial thoughts. While this problem could be much larger or scalable with the possibility of introducing new types of rovers, new ways to move, and inter-cardinal directions, I'm opting not to over-engineer with the scope of the assignment. I think the `IRoverCommand` is a fine enough way that it could be extensible down the line and even the `MarsRover` class could be abstracted with small modifications to allow different rovers with different movement behaviours and allow the developer to encapsulate the pieces of that object that are varying to allow a larger scale program to be built.
 
 ### Tech and Requirements
 
