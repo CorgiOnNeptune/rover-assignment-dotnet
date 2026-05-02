@@ -39,6 +39,9 @@ namespace Rover.Core.Commands
             return commands;
         }
 
+        /// <summary>
+        /// Execute all the given IRoverCommands on the rover with the bounds of the current plateau
+        /// </summary>
         public static void ExecuteAll(IEnumerable<IRoverCommand> commands, MarsRover rover, Plateau plateau)
         {
             foreach (IRoverCommand command in commands)
