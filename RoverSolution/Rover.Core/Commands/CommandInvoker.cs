@@ -11,7 +11,7 @@ namespace Rover.Core.Commands
         /// <summary>
         /// Create the commands to be executed based on the instructions
         /// </summary>
-        public static IEnumerable<IRoverCommand> CreateCommands(List<char> instructions)
+        public static IEnumerable<IRoverCommand> CreateCommands(string instructions)
         {
             List<IRoverCommand> commands = new List<IRoverCommand>();
 

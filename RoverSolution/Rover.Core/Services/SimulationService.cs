@@ -7,9 +7,9 @@ using System.Text;
 
 namespace Rover.Core.Services
 {
-    public static class RoverSimulationService
+    public class SimulationService
     {
-        public static SimulationResponse RunRoverSimulation(SimulationRequest request)
+        public Simulation RunSimulation(SimulationRequest request)
         {
             Plateau plateau = new Plateau(request.PlateauMaxX, request.PlateauMaxY);
 
@@ -31,7 +31,7 @@ namespace Rover.Core.Services
                 positionHistory.Add(newRover.PositionHistory);
             }
 
-            return new SimulationResponse(finalPositions, positionHistory);
+            return new Simulation(request, finalPositions, positionHistory);
         }
     }
 }

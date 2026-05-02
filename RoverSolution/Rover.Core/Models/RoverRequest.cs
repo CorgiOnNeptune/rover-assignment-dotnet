@@ -7,9 +7,9 @@ namespace Rover.Core.Models
     public class RoverRequest
     {
         public Position StartingPosition { get; set; }
-        internal List<char> Commands { get; set; }
+        public string Commands { get; set; }
 
-        public RoverRequest(Position startingPosition, List<char> commands)
+        public RoverRequest(Position startingPosition, string commands)
         {
             StartingPosition = new Position(startingPosition);
             Commands = commands;

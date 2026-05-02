@@ -8,10 +8,10 @@ namespace Rover.Core.Services
 {
     public static class RawRequestParserService
     {
-        public static SimulationRequest Parse(string rawInput)
+        public static SimulationRequest Parse(RawSimulationRequest rawInput)
         {
             // Format expected input
-            List<string> rawInputList = rawInput.Split('\n').Select(l => l.Trim()).ToList();
+            List<string> rawInputList = rawInput.Input.Split('\n').Select(l => l.Trim()).ToList();
 
             // Handle first line of raw input (plateau bounds)
             string[] rawPlateau = rawInputList[0].Split(" ");
@@ -37,7 +37,7 @@ namespace Rover.Core.Services
             foreach (string[] group in roverGroups)
             {
                 string[] coords = group[0].Split(" ");
-                List<char> instructions = group[1].ToList();
+                string instructions = group[1];
 
                 // Catch errors and initialize return variables if valid conversion.
                 if (!int.TryParse(coords[0].ToString(), out int roverX))

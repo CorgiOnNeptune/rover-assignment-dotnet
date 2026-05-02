@@ -17,4 +17,9 @@ namespace Rover.Core.Models
             Rovers = rovers;
         }
     }
+
+    public class RawSimulationRequest
+    {
+        public string Input { get; set; }
+    }
 }
