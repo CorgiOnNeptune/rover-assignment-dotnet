@@ -1,0 +1,75 @@
+﻿using Rover.Core.DTOs;
+using Rover.Core.Enums;
+using Rover.Core.Models;
+using Rover.Core.Services;
+using System.Text.Json;
+
+namespace Rover.Tests;
+
+public class ServiceTests
+{
+
+    private string rawInputExample = @"5 5
+1 2 N
+LMLMLMLMM
+3 3 E
+MMRMMRMRRM";
+
+    [Fact]
+    public void RawRequestParserService_RawInput_ShouldEqualExpected()
+    {
+
+        RoverRequestDTO expectedRoverOne = new(new Position(1, 2, Direction.N), [.. "LMLMLMLMM"]);
+        RoverRequestDTO expectedRoverTwo = new(new Position(3, 3, Direction.E), [.. "MMRMMRMRRM"]);
+        List<RoverRequestDTO> expectedRovers = [expectedRoverOne, expectedRoverTwo];
+
+        SimulationRequestDTO expectedObject = new(5, 5, expectedRovers);
+        SimulationRequestDTO actualObject = RawRequestParserService.Parse(rawInputExample);
+
+        string expectedResult = JsonSerializer.Serialize(expectedObject);
+        string actualResult = JsonSerializer.Serialize(actualObject);
+
+        Assert.Equal(expectedResult, actualResult);
+    }
+
+    [Fact]
+    public void SimulationService_RawInput_ShouldEqualExpectedFinalPositions()
+    {
+        SimulationRequestDTO request = RawRequestParserService.Parse(rawInputExample);
+        SimulationResponseDTO response = RoverSimulationService.RunRoverSimulation(request);
+
+        List<string> expectedPositions = new List<string> { "1 3 N", "5 1 E" };
+
+        Assert.Equal(expectedPositions, response.FinalPositions);
+    }
+
+    [Fact]
+    public void SimulationService_RawInput_RoverShouldNotExceedUpperBounds()
+    {
+        string outOfBoundsAttempt = @"5 5
+5 5 N
+MMMMMMMRMMMMM";
+
+        SimulationRequestDTO request = RawRequestParserService.Parse(outOfBoundsAttempt);
+        SimulationResponseDTO response = RoverSimulationService.RunRoverSimulation(request);
+
+        List<string> expectedPositions = new List<string> { "5 5 E" };
+
+        Assert.Equal(expectedPositions, response.FinalPositions);
+    }
+
+    [Fact]
+    public void SimulationService_RawInput_RoverShouldNotExceedLowerBounds()
+    {
+        string outOfBoundsAttempt = @"5 5
+0 0 W
+MMMMMMMMMMLMMMMMM";
+
+        SimulationRequestDTO request = RawRequestParserService.Parse(outOfBoundsAttempt);
+        SimulationResponseDTO response = RoverSimulationService.RunRoverSimulation(request);
+
+        List<string> expectedPositions = new List<string> { "0 0 S" };
+
+        Assert.Equal(expectedPositions, response.FinalPositions);
+    }
+}
