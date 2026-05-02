@@ -15,10 +15,15 @@ LMLMLMLMM
 3 3 E
 MMRMMRMRRM";
 
+    private string largeInput = @"100 100
+10 20 N
+LMLMLMLMMMRMLMRMRMRMRMLMLMLMLMMMM
+30 30 E
+MMRMMRMRRMLMRMMMMMMRRRRLLLLMMMMMMMLMMMMRMMMM";
+
     [Fact]
     public void RawRequestParserService_RawInput_ShouldEqualExpected()
     {
-
         RoverRequestDTO expectedRoverOne = new(new Position(1, 2, Direction.N), [.. "LMLMLMLMM"]);
         RoverRequestDTO expectedRoverTwo = new(new Position(3, 3, Direction.E), [.. "MMRMMRMRRM"]);
         List<RoverRequestDTO> expectedRovers = [expectedRoverOne, expectedRoverTwo];
@@ -33,12 +38,39 @@ MMRMMRMRRM";
     }
 
     [Fact]
+    public void RawRequestParserService_LargeInput_ShouldEqualExpected()
+    {
+        RoverRequestDTO expectedRoverOne = new(new Position(10, 20, Direction.N), [.. "LMLMLMLMM"]);
+        RoverRequestDTO expectedRoverTwo = new(new Position(30, 30, Direction.E), [.. "MMRMMRMRRM"]);
+        List<RoverRequestDTO> expectedRovers = [expectedRoverOne, expectedRoverTwo];
+
+        SimulationRequestDTO expectedObject = new(100, 100, expectedRovers);
+        SimulationRequestDTO actualObject = RawRequestParserService.Parse(largeInput);
+
+        string expectedResult = JsonSerializer.Serialize(expectedObject);
+        string actualResult = JsonSerializer.Serialize(actualObject);
+
+        Assert.Equal(expectedResult, actualResult);
+    }
+
+    [Fact]
     public void SimulationService_RawInput_ShouldEqualExpectedFinalPositions()
     {
         SimulationRequestDTO request = RawRequestParserService.Parse(rawInputExample);
         SimulationResponseDTO response = RoverSimulationService.RunRoverSimulation(request);
 
         List<string> expectedPositions = new List<string> { "1 3 N", "5 1 E" };
+
+        Assert.Equal(expectedPositions, response.FinalPositions);
+    }
+
+    [Fact]
+    public void SimulationService_LargeInput_ShouldEqualExpectedFinalPositions()
+    {
+        SimulationRequestDTO request = RawRequestParserService.Parse(largeInput);
+        SimulationResponseDTO response = RoverSimulationService.RunRoverSimulation(request);
+
+        List<string> expectedPositions = new List<string> { "11 26 N", "49 33 E" };
 
         Assert.Equal(expectedPositions, response.FinalPositions);
     }

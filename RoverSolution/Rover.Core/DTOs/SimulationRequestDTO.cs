@@ -6,9 +6,9 @@ namespace Rover.Core.DTOs
 {
     public class SimulationRequestDTO
     {
-        public int PlateauMaxX;
-        public int PlateauMaxY;
-        public List<RoverRequestDTO> Rovers;
+        public int PlateauMaxX { get; set; }
+        public int PlateauMaxY { get; set; }
+        public List<RoverRequestDTO> Rovers { get; set; }
 
         public SimulationRequestDTO(int plateauMaxX, int plateauMaxY, List<RoverRequestDTO> rovers)
         {

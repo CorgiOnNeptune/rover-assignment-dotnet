@@ -12,11 +12,10 @@ namespace Rover.Core.Services
         public static SimulationRequestDTO Parse(string rawInput)
         {
             // Format expected input
-            string rawInputNoSpaces = rawInput.Replace(" ", string.Empty);
-            List<string> rawInputList = rawInputNoSpaces.Split('\n').Select(l => l.Trim()).ToList();
+            List<string> rawInputList = rawInput.Split('\n').Select(l => l.Trim()).ToList();
 
             // Handle first line of raw input (plateau bounds)
-            string rawPlateau = rawInputList[0];
+            string[] rawPlateau = rawInputList[0].Split(" ");
 
             if (!int.TryParse(rawPlateau[0].ToString(), out int plateauX))
             {
@@ -38,7 +37,7 @@ namespace Rover.Core.Services
 
             foreach (string[] group in roverGroups)
             {
-                string coords = group[0];
+                string[] coords = group[0].Split(" ");
                 List<char> instructions = group[1].ToList();
 
                 // Catch errors and initialize return variables if valid conversion.
