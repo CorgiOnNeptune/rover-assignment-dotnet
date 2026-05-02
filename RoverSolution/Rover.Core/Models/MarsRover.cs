@@ -1,5 +1,4 @@
-﻿using Rover.Core.Enums;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
@@ -10,16 +9,16 @@ namespace Rover.Core.Models
         public Position Position { get; set; }
         public List<Position> PositionHistory { get; set; } = new List<Position>();
 
-        public MarsRover(int startingX, int startingY, Direction startingDirection)
+        public MarsRover(Position position)
         {
-            Position = new Position(startingX, startingY, startingDirection);
-            PositionHistory.Add(Position);
+            Position = new Position(position.X, position.Y, position.Direction);
+            PositionHistory.Add(new Position(Position));
         }
 
         public void UpdatePosition(Position position)
         {
             Position = position;
-            PositionHistory.Add(position);
+            PositionHistory.Add(new Position(position));
         }
     }
 }
