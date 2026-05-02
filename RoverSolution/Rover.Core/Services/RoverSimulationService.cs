@@ -1,5 +1,4 @@
 ﻿using Rover.Core.Commands;
-using Rover.Core.DTOs;
 using Rover.Core.Enums;
 using Rover.Core.Models;
 using System;
@@ -10,14 +9,14 @@ namespace Rover.Core.Services
 {
     public static class RoverSimulationService
     {
-        public static SimulationResponseDTO RunRoverSimulation(SimulationRequestDTO request)
+        public static SimulationResponse RunRoverSimulation(SimulationRequest request)
         {
             Plateau plateau = new Plateau(request.PlateauMaxX, request.PlateauMaxY);
 
             List<string> finalPositions = new List<string>();
             List<List<Position>> positionHistory = new List<List<Position>>();
 
-            foreach (RoverRequestDTO rover in request.Rovers)
+            foreach (RoverRequest rover in request.Rovers)
             {
                 MarsRover newRover = new MarsRover(rover.StartingPosition);
 
@@ -32,7 +31,7 @@ namespace Rover.Core.Services
                 positionHistory.Add(newRover.PositionHistory);
             }
 
-            return new SimulationResponseDTO(finalPositions, positionHistory);
+            return new SimulationResponse(finalPositions, positionHistory);
         }
     }
 }

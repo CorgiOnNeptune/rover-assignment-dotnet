@@ -1,16 +1,15 @@
-﻿using Rover.Core.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Rover.Core.DTOs
+namespace Rover.Core.Models
 {
-    public class SimulationResponseDTO
+    public class SimulationResponse
     {
         public List<string> FinalPositions { get; set; }
         public List<List<Position>> PositionHistory { get; set; }
 
-        public SimulationResponseDTO(List<string> finalPositions, List<List<Position>> positionHistory)
+        public SimulationResponse(List<string> finalPositions, List<List<Position>> positionHistory)
         {
             FinalPositions = finalPositions;
             PositionHistory = positionHistory;

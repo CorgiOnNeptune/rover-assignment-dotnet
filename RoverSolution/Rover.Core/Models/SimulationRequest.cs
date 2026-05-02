@@ -2,15 +2,15 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace Rover.Core.DTOs
+namespace Rover.Core.Models
 {
-    public class SimulationRequestDTO
+    public class SimulationRequest
     {
         public int PlateauMaxX { get; set; }
         public int PlateauMaxY { get; set; }
-        public List<RoverRequestDTO> Rovers { get; set; }
+        public List<RoverRequest> Rovers { get; set; }
 
-        public SimulationRequestDTO(int plateauMaxX, int plateauMaxY, List<RoverRequestDTO> rovers)
+        public SimulationRequest(int plateauMaxX, int plateauMaxY, List<RoverRequest> rovers)
         {
             PlateauMaxX = plateauMaxX;
             PlateauMaxY = plateauMaxY;
