@@ -3,7 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Rover.Core.Interfaces
+namespace Rover.Core.Commands
 {
     public abstract class IRoverCommand
     {

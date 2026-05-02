@@ -1,17 +1,17 @@
-﻿using Rover.Core.Interfaces;
-using Rover.Core.Models;
+﻿using Rover.Core.Models;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
 namespace Rover.Core.Commands
 {
-    public class RotateRightCommand : IRoverCommand
+    internal class RotateRightCommand : IRoverCommand
     {
         public override void Execute(MarsRover rover, Plateau plateau)
         {
-            rover.Position.Direction = Utils.TurnClockwise(rover.Position.Direction);
-            rover.PositionHistory.Add(rover.Position);
+            Position pos = rover.Position;
+            Position newPos = new Position(pos.X, pos.Y, Utils.TurnClockwise(pos.Direction));
+            rover.UpdatePosition(newPos);
         }
     }
 }

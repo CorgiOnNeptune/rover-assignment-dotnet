@@ -1,5 +1,4 @@
-﻿using Rover.Core.Interfaces;
-using Rover.Core.Enums;
+﻿using Rover.Core.Enums;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -7,7 +6,7 @@ using Rover.Core.Models;
 
 namespace Rover.Core.Commands
 {
-    public class MoveCommand : IRoverCommand
+    internal class MoveCommand : IRoverCommand
     {
         public override void Execute(MarsRover rover, Plateau plateau)
         {
@@ -15,20 +14,20 @@ namespace Rover.Core.Commands
 
             switch (newPosition.Direction)
             {
-                case Direction.North: 
+                case Direction.N:
                     newPosition.Y++;
                     break;
 
-                case Direction.East: 
+                case Direction.E:
                     newPosition.X++;
                     break;
 
-                case Direction.South: 
+                case Direction.S:
                     newPosition.Y--;
                     break;
 
-                case Direction.West: 
-                    newPosition.X--; 
+                case Direction.W:
+                    newPosition.X--;
                     break;
 
                 default:

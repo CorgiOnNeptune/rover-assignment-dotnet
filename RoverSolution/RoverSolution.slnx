@@ -1,5 +1,6 @@
 <Solution>
   <Project Path="Rover.Api/Rover.Api.csproj" />
   <Project Path="Rover.Core/Rover.Core.csproj" />
+  <Project Path="Rover.Tests/Rover.Tests.csproj" />
   <Project Path="Rover.Web/Rover.Web.csproj" />
 </Solution>
