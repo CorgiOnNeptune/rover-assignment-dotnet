@@ -4,14 +4,14 @@ using System.Diagnostics;
 
 namespace Rover.Web.Controllers
 {
-    public class HomeController : Controller
+    public class SimulationController : Controller
     {
         public IActionResult Index()
         {
             return View();
         }
 
-        public IActionResult Privacy()
+        public IActionResult History()
         {
             return View();
         }
