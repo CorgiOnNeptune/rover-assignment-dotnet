@@ -25,16 +25,16 @@ I'm approaching this with a sort of simplified Command design pattern after init
 1. A Web Service
    - ASP.NET Core Web API
      - RESTful design with controller-based architecture
-       - POST `/api/simulation`
+       - POST `/api/simulations`
          - Create a simulation result.
          - Request body includes starting x, y and rovers with starting x,y,cardinal, and instructions.
          - Response: 200 | Array of finalPositions and/or a resultId to navigate to results page with visualization.
          - Either this or the next endpoint will handle saving to JSON.
-       - POST `/api/results/{resultId}`
+       - POST `/api/simulations/{simulationId}/screenshot`
          - This will need to include image binary and base64 to "upload" the image to the web service and create the actual object in the `history.json`
          - 201 Created
-       - GET `/api/results`
-       - GET `/api/results/{resultId}`
+       - GET `/api/simulations`
+       - GET `/api/simulations/{simulationId}`
 
      - History of all inputs/outputs stored into a JSON "db" file
        - (No point doing a full DB for this scale of a non-production project)

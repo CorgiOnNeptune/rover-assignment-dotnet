@@ -11,6 +11,11 @@ namespace Rover.Web.Controllers
             return View();
         }
 
+        public IActionResult Result(int id)
+        {
+            return View();
+        }
+
         public IActionResult History()
         {
             return View();

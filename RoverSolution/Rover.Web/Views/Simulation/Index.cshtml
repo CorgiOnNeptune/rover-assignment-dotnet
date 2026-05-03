@@ -2,15 +2,95 @@
     ViewData["Title"] = "Rover Simulation";
 }
 
-<div class="flex-column justify-content-start">
-    <h2 class="display-4 text-center">Simulate Rover</h2>
-    <label for="plateau-x" class="form-label">Pleateau Upper Bounds</label>
+<!-- Input Switch:  Structured / Raw -->
+<div class="mb-4 d-flex gap-2 align-items-center">
+    <span class="text-muted me-2">INPUT MODE</span>
+    <div class="btn-group w-25" role="group">
+        <input type="radio" class="btn-check" name="btnradio" id="btnStructured" autocomplete="off" checked>
+        <label class="btn btn-outline-light w-100" for="btnStructured">Structured</label>
 
-    <div class="input-group">
-        <input type="number" class="form-control" placeholder="0" aria-label="X" />
-        <span class="input-group-text">,</span>
-        <input type="number" class="form-control" placeholder="0" aria-label="Y" />
+        <input type="radio" class="btn-check" name="btnradio" id="btnRaw" autocomplete="off">
+        <label class="btn btn-outline-light w-100" for="btnRaw">Raw</label>
     </div>
-    <div class="form-text" id="plateau-info">Plateau starts at 0,0. Set the Upper Bounds.</div>
-
 </div>
+
+<div class="row">
+    <div class="col-6 border-end border-secondary pe-4">
+        <!-- Rovers Container -->
+        <!-- TODO: D: none if Raw Input -->
+        <div class="d-flex justify-content-between align-items-center mb-3">
+            <h2>Rovers</h2>
+            <button type="submit" name="submit" value="add-rover" class="btn btn-outline-secondary rounded-pill">+ Add Rover</button>
+        </div>
+        <div class="rovers-container border border-secondary rounded p-3 pb-0">
+            <!-- Rovers Cards -->   <!-- TODO: Loop through Rovers -->
+            <div class="card border-seconday mb-3 p-3">
+                <div class="d-flex justify-content-between align-items-start">
+                    <p class="fw-semibold text-light">Rover 1</p>
+                    <!-- TODO if Rovers > 1 then Enable this button -->
+                    <button type="submit" name="submit" value="remove-rover" class="btn btn-sm btn-outline-danger py-0 px-2 rounded-pill" disabled>Remove</button>
+                </div>
+                <!-- Starting Position Inputs -->
+                <div class="row form-group">
+                    <div class="col-4">
+                        <label class="form-label small">Starting X-Axis</label>
+                        <input type="number" class="form-control form-control-sm" />
+                    </div>
+                    <div class="col-4">
+                        <label class="form-label small">Starting Y-Axis</label>
+                        <input type="number" class="form-control form-control-sm" />
+                    </div>
+                    <div class="col-4">
+                        <!-- TODO: Dropdown for North,South,East,West -->
+                        <label class="form-label small">Heading</label>
+                        <input class="form-control form-control-sm" />
+                    </div>
+                </div>
+                <!-- TODO: If time add new row of buttons here to Click for "Turn Left, Turn Right, Move Forward" -->
+                <div class="row mt-2">
+                    <div class="col-12">
+                        <label class="form-label small">Instructions</label>
+                        <input type="text" class="form-control form-control-sm" />
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Raw Input -->   <!-- TODO: D only if Raw input -->
+        <div></div>
+    </div>
+
+    <!-- Plateau Inputs -->   <!-- Toggle: Raw Example and Explanation ? -->
+    <div class="col-6 px-4">
+        <h2 class="mb-3">Plateau</h2>
+        <div class="row">
+            <div class="col-12 mb-4">
+                <label class="form-label">Maximum X-Axis</label>
+                <input type="number" class="form-control" />
+            </div>
+            <div class="col-12">
+                <label class="form-label">Maximum Y-Axis</label>
+                <input type="number" class="form-control" />
+            </div>
+        </div>
+        <p class="small text-secondary mt-4">Plateau starts at (0,0).</p>
+        <p class="small text-secondary">
+            Plateau upper bounds are limited at (x,x) for visual grid.
+        </p>
+        <p class="small text-secondary">
+            Positions for rovers outside the visual limit will still be recorded.
+        </p>
+    </div>
+
+    <!-- Raw Input Section Example -->
+    <div></div>
+
+    <!-- Submit Buttons -->
+    <div class="d-flex gap-3 justify-content-end mt-5 pt-3 border-top border-secondary">
+        <button type="submit" name="submit" class="btn btn-outline-light rounded-pill px-4 fw-semibold">I'm Feeling Lucky</button>
+        <button type="submit" name="submit" class="btn btn-success rounded-pill px-4 fw-semibold">Run Simulation</button>
+
+    </div>
+</div>
+
+<!-- Buttons to start run -->
