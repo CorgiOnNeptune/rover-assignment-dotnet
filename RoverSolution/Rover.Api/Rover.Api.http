@@ -1,6 +1,43 @@
-@Rover.Api_HostAddress = http://localhost:5077
+@Rover.Api_HostAddress = https://localhost:7081
 
-GET {{Rover.Api_HostAddress}}/weatherforecast/
+GET {{Rover.Api_HostAddress}}/api/simulations/
 Accept: application/json
+
+###
+
+POST {{Rover.Api_HostAddress}}/api/simulations/raw
+Content-Type: application/json
+
+{
+  "Input": "5 5\n1 2 N\nLMLMLMLMM\n3 3 E\nMMRMMRMRRM"
+}
+
+###
+
+POST {{Rover.Api_HostAddress}}/api/simulations
+Content-Type: application/json
+
+{
+  "PlateauMaxX": 5,
+  "PlateauMaxY": 5,
+  "Rovers": [
+    {
+      "StartingPosition": {
+        "X": 1,
+        "Y": 2,
+        "Direction": "N"
+      },
+      "Commands": "LMLMLMLMM"
+    },
+    {
+      "StartingPosition": {
+        "X": 3,
+        "Y": 3,
+        "Direction": "E"
+      },
+      "Commands": "MMRMMRMRRM"
+    }
+  ]
+}
 
 ###
