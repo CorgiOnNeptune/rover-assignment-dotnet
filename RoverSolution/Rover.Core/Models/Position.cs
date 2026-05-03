@@ -1,4 +1,5 @@
 ﻿using Rover.Core.Enums;
+using System.Text.Json.Serialization;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -11,6 +12,7 @@ namespace Rover.Core.Models
         public int Y { get; set; }
         public Direction Direction { get; set; }
 
+        [JsonConstructor]
         public Position(int x, int y, Direction direction)
         {
             X = x;

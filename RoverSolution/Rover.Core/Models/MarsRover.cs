@@ -9,9 +9,9 @@ namespace Rover.Core.Models
         public Position Position { get; set; }
         public List<Position> PositionHistory { get; set; } = new List<Position>();
 
-        public MarsRover(Position position)
+        public MarsRover(Position initialPosition)
         {
-            Position = new Position(position.X, position.Y, position.Direction);
+            Position = new Position(initialPosition);
             PositionHistory.Add(new Position(Position));
         }
 

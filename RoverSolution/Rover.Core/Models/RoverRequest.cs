@@ -1,16 +1,15 @@
-﻿using Rover.Core.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace Rover.Core.DTOs
+namespace Rover.Core.Models
 {
-    public class RoverRequestDTO
+    public class RoverRequest
     {
         public Position StartingPosition { get; set; }
-        internal List<char> Commands { get; set; }
+        public string Commands { get; set; }
 
-        public RoverRequestDTO(Position startingPosition, List<char> commands)
+        public RoverRequest(Position startingPosition, string commands)
         {
             StartingPosition = new Position(startingPosition);
             Commands = commands;

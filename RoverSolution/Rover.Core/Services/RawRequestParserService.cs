@@ -1,5 +1,4 @@
-﻿using Rover.Core.DTOs;
-using Rover.Core.Enums;
+﻿using Rover.Core.Enums;
 using Rover.Core.Models;
 using System;
 using System.Collections.Generic;
@@ -9,10 +8,10 @@ namespace Rover.Core.Services
 {
     public static class RawRequestParserService
     {
-        public static SimulationRequestDTO Parse(string rawInput)
+        public static SimulationRequest Parse(RawSimulationRequest rawInput)
         {
             // Format expected input
-            List<string> rawInputList = rawInput.Split('\n').Select(l => l.Trim()).ToList();
+            List<string> rawInputList = rawInput.Input.Split('\n').Select(l => l.Trim()).ToList();
 
             // Handle first line of raw input (plateau bounds)
             string[] rawPlateau = rawInputList[0].Split(" ");
@@ -33,12 +32,12 @@ namespace Rover.Core.Services
 
             // Split rovers into groups of 2 (First line starting position, second line commands)
             IEnumerable<string[]> roverGroups = rawInputList.Chunk(2);
-            List<RoverRequestDTO> rovers = new List<RoverRequestDTO>();
+            List<RoverRequest> rovers = new List<RoverRequest>();
 
             foreach (string[] group in roverGroups)
             {
                 string[] coords = group[0].Split(" ");
-                List<char> instructions = group[1].ToList();
+                string instructions = group[1];
 
                 // Catch errors and initialize return variables if valid conversion.
                 if (!int.TryParse(coords[0].ToString(), out int roverX))
@@ -59,11 +58,11 @@ namespace Rover.Core.Services
 
                 Position roverPosition = new Position(roverX, roverY, roverDirection);
 
-                RoverRequestDTO rover = new RoverRequestDTO(roverPosition, instructions);
+                RoverRequest rover = new RoverRequest(roverPosition, instructions);
                 rovers.Add(rover);
             }
             
-            return new SimulationRequestDTO(plateauX, plateauY, rovers);
+            return new SimulationRequest(plateauX, plateauY, rovers);
         }
     }
 }
