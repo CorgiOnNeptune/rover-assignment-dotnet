@@ -9,7 +9,11 @@ namespace Rover.Api.Services
 
         public async Task InsertAsync(Simulation simulation)
         {
+            int nextId = Simulations.GetNextIdValue();
+            if (nextId == 0)
+                nextId = 1;
 
+            simulation.Id = nextId;
             await Simulations.InsertOneAsync(simulation);
         }
 

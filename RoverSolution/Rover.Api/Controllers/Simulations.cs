@@ -20,7 +20,7 @@ namespace Rover.Api.Controllers
 
             return CreatedAtAction(
                 actionName: nameof(Get),
-                routeValues: new { SimulationId = newSimulation.Id },
+                routeValues: new { simulationId = newSimulation.Id },
                 value: newSimulation.FinalPositionsRaw
             );
         }
@@ -34,7 +34,7 @@ namespace Rover.Api.Controllers
 
             return CreatedAtAction(
                 actionName: nameof(Get),
-                routeValues: new { SimulationId = newSimulation.Id },
+                routeValues: new { simulationId = newSimulation.Id },
                 value: newSimulation.FinalPositionsRaw
             );
         }
@@ -43,14 +43,14 @@ namespace Rover.Api.Controllers
         public IActionResult GetAll()
         {
             IEnumerable<Simulation>? simulations = dataStore.GetAll();
-            return Ok();
+            return Ok(simulations);
         }
 
         [HttpGet("{simulationId:int}")]
         public IActionResult Get(int simulationId)
         {
-            Simulation? result = dataStore.GetById(simulationId);
-            return Ok();
+            Simulation? simulation = dataStore.GetById(simulationId);
+            return simulation == null ? NotFound() : Ok(simulation);
         }
 
         [HttpPost("{simulationId:int}/screenshot")]
@@ -58,11 +58,6 @@ namespace Rover.Api.Controllers
         {
             await dataStore.UpdateAsync(simulationId, updatedSimulation);
             return Ok();
-            //return CreatedAtAction(
-            //    actionName: nameof(Get),
-            //    routeValues: new { SimulationId = newSimulation.Id },
-            //    value: newSimulation.FinalPositionsRaw
-            //);
         }
     }
 }

@@ -1,22 +1,22 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Text;
 
 namespace Rover.Core.Enums
 {
     public enum Direction
     {
-        [Description("North")]
+        [Display(Name = "North")]
         N,
 
-        [Description("East")]
+        [Display(Name = "East")]
         E,
 
-        [Description("South")]
+        [Display(Name = "South")]
         S,
 
-        [Description("West")]
+        [Display(Name = "West")]
         W,
     }
 }
