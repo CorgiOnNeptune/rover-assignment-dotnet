@@ -54,15 +54,14 @@ namespace Rover.Api.Controllers
         }
 
         [HttpPost("{simulationId:int}/screenshot")]
-        public async Task<IActionResult> CreateScreenshot(int simulationId, [FromBody] string screenshot )
+        public async Task<IActionResult> CreateScreenshot(int simulationId, [FromBody] string screenshot)
         {
             Simulation? simulation = dataStore.GetById(simulationId);
 
             if (simulation == null)
                 return BadRequest();
 
-            simulation.Screenshot = screenshot;
-            await dataStore.UpdateAsync(simulationId, simulation);
+            await dataStore.UpdateScreenshotAsync(simulationId, screenshot);
             return Ok();
         }
     }

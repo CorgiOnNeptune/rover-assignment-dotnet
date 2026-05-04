@@ -7,9 +7,9 @@
 
 <form asp-controller="Simulation" asp-action="Index" method="post">
 
-<!-- Input Switch:  Structured / Raw -->
+    <!-- Input Switch:  Structured / Raw -->
     <!-- TODO: Disabled unless time grants -->
-@* <div class="mb-4 d-flex gap-2 align-items-center">
+    @* <div class="mb-4 d-flex gap-2 align-items-center">
     <span class="text-muted me-2">INPUT MODE</span>
     <div class="btn-group w-25" role="group">
         <input type="radio" class="btn-check" name="btnradio" id="btnStructured" autocomplete="off" checked>
@@ -18,82 +18,82 @@
             <input type="radio" class="btn-check" name="btnradio" id="btnRaw" autocomplete="off" disabled>
             <label class="btn btn-outline-light w-100 disabled" for="btnRaw">Raw</label>
     </div>
-</div> *@
+    </div> *@
 
-<div class="row">
-    <div class="col-6 border-end border-secondary pe-4">
-        <!-- Rovers Container -->
-        <div class="d-flex justify-content-between align-items-center mb-3">
-            <h2>Rovers</h2>
-            <button type="submit" name="submit" value="add-rover" class="btn btn-outline-light rounded-pill">+ Add Rover</button>
-        </div>
-        <div class="rovers-container border border-secondary rounded p-3 pb-0">
+    <div class="row">
+        <div class="col-6 border-end border-secondary pe-4">
+            <!-- Rovers Container -->
+            <div class="d-flex justify-content-between align-items-center mb-3">
+                <h2>Rovers</h2>
+                <button type="submit" name="submit" value="add-rover" class="btn btn-outline-light rounded-pill">+ Add Rover</button>
+            </div>
+            <div class="rovers-container border border-secondary rounded p-3 pb-0">
                 <!-- Rovers Cards -->
                 @for (int i = 0; i < Model.Rovers.Count; i++)
                 {
                     <div class="card border-secondary mb-3 p-3">
-                <div class="d-flex justify-content-between align-items-start">
+                        <div class="d-flex justify-content-between align-items-start">
                             <p class="fw-semibold text-light">Rover @(i + 1)</p>
                             <button type="submit" name="submit" value="@($"remove:{i}")" class="btn btn-sm btn-outline-danger py-0 px-2 rounded-pill"
-                                    @(Model.Rovers.Count <= 1 ? "disabled" : "")>
+                                @(Model.Rovers.Count <= 1 ? "disabled" : "")>
                                 Remove
                             </button>
-                </div>
-                <!-- Starting Position Inputs -->
-                <div class="row form-group">
-                    <div class="col-4">
-                        <label class="form-label small">Starting X-Axis</label>
+                        </div>
+                        <!-- Starting Position Inputs -->
+                        <div class="row form-group">
+                            <div class="col-4">
+                                <label class="form-label small">Starting X-Axis</label>
                                 <input asp-for="@Model.Rovers[i].StartingX" type="number" class="form-control form-control-sm" />
                                 <span asp-validation-for="@Model.Rovers[i].StartingX" class="text-danger small"></span>
-                    </div>
-                    <div class="col-4">
-                        <label class="form-label small">Starting Y-Axis</label>
+                            </div>
+                            <div class="col-4">
+                                <label class="form-label small">Starting Y-Axis</label>
                                 <input asp-for="@Model.Rovers[i].StartingY" type="number" class="form-control form-control-sm" />
                                 <span asp-validation-for="@Model.Rovers[i].StartingY" class="text-danger small"></span>
-                    </div>
-                    <div class="col-4">
-                        <label class="form-label small">Heading</label>
+                            </div>
+                            <div class="col-4">
+                                <label class="form-label small">Heading</label>
                                 <select asp-for="@Model.Rovers[i].Direction" asp-items="Html.GetEnumSelectList<Direction>()" class="form-select form-select-sm"></select>
-                    </div>
-                </div>
-                <!-- TODO: If time add new row of buttons here to Click for "Turn Left, Turn Right, Move Forward" -->
-                <div class="row mt-2">
-                    <div class="col-12">
+                            </div>
+                        </div>
+                        <!-- TODO: If time add new row of buttons here to Click for "Turn Left, Turn Right, Move Forward" -->
+                        <div class="row mt-2">
+                            <div class="col-12">
                                 <label class="form-label small">Instructions (L, M, R)</label>
                                 <input asp-for="@Model.Rovers[i].Instructions" type="text" class="form-control form-control-sm" />
                                 <span asp-validation-for="@Model.Rovers[i].Instructions" class="text-danger small"></span>
+                            </div>
+                        </div>
                     </div>
-                </div>
-            </div>
                 }
-        </div>
+            </div>
 
-    </div>
+        </div>
 
         <!-- Plateau Inputs -->
-    <div class="col-6 px-4">
-        <h2 class="mb-3">Plateau</h2>
-        <div class="row">
-            <div class="col-12 mb-4">
-                <label class="form-label">Maximum X-Axis</label>
+        <div class="col-6 px-4">
+            <h2 class="mb-3">Plateau</h2>
+            <div class="row">
+                <div class="col-12 mb-4">
+                    <label class="form-label">Maximum X-Axis</label>
                     <input asp-for="PlateauMaxX" type="number" class="form-control" />
                     <span asp-validation-for="PlateauMaxX" class="text-danger small"></span>
-            </div>
-            <div class="col-12">
-                <label class="form-label">Maximum Y-Axis</label>
+                </div>
+                <div class="col-12">
+                    <label class="form-label">Maximum Y-Axis</label>
                     <input asp-for="PlateauMaxY" type="number" class="form-control" />
                     <span asp-validation-for="PlateauMaxY" class="text-danger small"></span>
+                </div>
             </div>
+            <p class="small text-secondary mt-4">Plateau starts at (0,0)</p>
         </div>
-        <p class="small text-secondary mt-4">Plateau starts at (0,0)</p>
-    </div>
 
-    <!-- Submit Buttons -->
-    <div class="d-flex gap-3 justify-content-end mt-5 pt-3 border-top border-secondary">
-        <button type="submit" name="submit" class="btn btn-outline-light rounded-pill px-4 fw-semibold">I'm Feeling Lucky</button>
-        <button type="submit" name="submit" class="btn btn-success rounded-pill px-4 fw-semibold">Run Simulation</button>
+        <!-- Submit Buttons -->
+        <div class="d-flex gap-3 justify-content-end mt-5 pt-3 border-top border-secondary">
+            <button type="submit" name="submit" class="btn btn-outline-light rounded-pill px-4 fw-semibold">I'm Feeling Lucky</button>
+            <button type="submit" name="submit" class="btn btn-success rounded-pill px-4 fw-semibold">Run Simulation</button>
 
+        </div>
     </div>
-</div>
 
 </form>

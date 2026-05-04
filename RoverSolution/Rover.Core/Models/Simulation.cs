@@ -8,13 +8,13 @@ namespace Rover.Core.Models
     {
         public int Id { get; set; } = 1; // Id gets auto-incremented by JsonFlatFileDataStore package
         public DateTime RequestTime { get; init; } = DateTime.Now;
+        public string? Screenshot { get; set; } = "";
 
         public SimulationRequest Instructions { get; set; }
         public List<string> FinalPositions { get; set; } = [];
         public string FinalPositionsRaw { get; set; } = string.Empty;
         public List<List<Position>> PositionHistory { get; set; } = [];
 
-        public string? Screenshot { get; set; } = "";
 
         public Simulation(SimulationRequest instructions, List<string> finalPositions, List<List<Position>> positionHistory)
         {

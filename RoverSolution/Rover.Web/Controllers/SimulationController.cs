@@ -1,5 +1,4 @@
 using Microsoft.AspNetCore.Mvc;
-using Rover.Core.Enums;
 using Rover.Core.Models;
 using Rover.Web.Models;
 using System.Diagnostics;
@@ -86,6 +85,23 @@ namespace Rover.Web.Controllers
 
             ModelState.Clear();
             return View(model);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> SaveScreenshot([FromBody] ScreenshotRequest request)
+        {
+            HttpClient client = httpClientFactory.CreateClient("RoverAPI");
+
+            string json = JsonSerializer.Serialize(request.Screenshot);
+            StringContent content = new StringContent(json, Encoding.UTF8, "application/json");
+
+            HttpResponseMessage response = await client.PostAsync(
+                $"api/simulations/{request.SimulationId}/screenshot", content);
+
+            if (!response.IsSuccessStatusCode)
+                return StatusCode((int)response.StatusCode);
+
+            return Ok();
         }
 
         private async Task<IActionResult> SubmitSimulation(SimulationIndexViewModel model)

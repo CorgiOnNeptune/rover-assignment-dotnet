@@ -86,5 +86,50 @@
 
 <div class="d-flex gap-3 justify-content-end mt-4 pt-3 border-top border-secondary">
     <a asp-controller="Simulation" asp-action="Index" class="btn btn-outline-light rounded-pill px-4">New Simulation</a>
-    <button type="button" class="btn btn-success rounded-pill px-4" disabled>Save Screenshot</button>
+    <button type="button" id="btnSaveScreenshot" data-id="@Model.Id"
+            class="btn btn-success rounded-pill px-4">Save Screenshot</button>
 </div>
+
+@section Scripts {
+    <script src="~/lib/html2canvas/dist/html2canvas.js"></script>
+    <script>
+        document.getElementById('btnSaveScreenshot').addEventListener('click', async function () {
+            const btn = this;
+            btn.disabled = true;
+            btn.textContent = 'Saving...';
+
+            try {
+                const gridEl = document.querySelector('.plateau-inner');
+                const canvas = await html2canvas(gridEl, {
+                    backgroundColor: '#212529',
+                    scale: 2,
+                });
+
+                const pngBase64 = canvas.toDataURL('image/png');
+                const simulationId = btn.getAttribute('data-id');
+
+                // Calls to the MVC Controller to then handle interacting with our API and db json
+                const response = await fetch('/Simulation/SaveScreenshot', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        simulationId: parseInt(simulationId),
+                        screenshot: pngBase64,
+                    }),
+                });
+
+                if (response.ok) {
+                    btn.textContent = 'Saved';
+                    btn.classList.replace('btn-success', 'btn-outline-success');
+                } else {
+                    btn.textContent = 'Try Again';
+                    btn.disabled = false;
+                }
+            } catch (err) {
+                console.error('Screenshot failed:', err);
+                btn.textContent = 'Try Again';
+                btn.disabled = false;
+            }
+        });
+    </script>
+}
