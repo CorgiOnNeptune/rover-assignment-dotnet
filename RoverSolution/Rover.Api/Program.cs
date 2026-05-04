@@ -1,3 +1,5 @@
+using JsonFlatFileDataStore;
+using Rover.Api.Services;
 using Rover.Core.Services;
 using System.Text.Json.Serialization;
 
@@ -5,6 +7,10 @@ WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddScoped<SimulationService>();
+builder.Services.AddSingleton<DataStoreService>();
+
+IWebHostEnvironment env = builder.Environment;
+builder.Services.AddSingleton(_ => new DataStore(Path.Combine(env.ContentRootPath, "Data", "simulations.json")));
 
 builder.Services.AddControllers()
     // JsonOption to handle deserialization of direction to Enum from string instead of int
