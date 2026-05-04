@@ -60,9 +60,20 @@ namespace Rover.Web.Controllers
             return View(simulation);
         }
 
-        public IActionResult History()
+        public async Task<IActionResult> History()
         {
-            return View();
+            HttpClient client = httpClientFactory.CreateClient("RoverAPI");
+            HttpResponseMessage response = await client.GetAsync("api/simulations");
+
+            List<Simulation> simulations = new List<Simulation>();
+
+            if (response.IsSuccessStatusCode)
+            {
+                string json = await response.Content.ReadAsStringAsync();
+                simulations = JsonSerializer.Deserialize<List<Simulation>>(json, _jsonOptions) ?? new List<Simulation>();
+            }
+
+            return View(simulations);
         }
 
         [ResponseCache(Duration = 0, Location = ResponseCacheLocation.None, NoStore = true)]
