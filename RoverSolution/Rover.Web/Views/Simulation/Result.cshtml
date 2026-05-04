@@ -1,4 +1,62 @@
-﻿@{
+﻿@model Rover.Core.Models.Simulation
+@{
     ViewData["Title"] = "Simulation Result";
 }
-<h1>@ViewData["Title"]</h1>
+
+<div class="d-flex align-items-start gap-3 mb-2">
+    <h2>Simulation #@Model.Id</h2>
+    <div>
+        <span class="text-muted small">@Model.RequestTime.ToLongDateString()</span><br />
+        <span class="text-muted small">@Model.RequestTime.ToLongTimeString()</span>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Rover Table -->
+    <div class="col-5 d-flex flex-column border-end border-secondary pe-4">
+        <span class="text-muted me-2">INPUTS & OUTCOMES</span>
+        <p class="small text-light mt-2 mb-3">Plateau Upper Bounds: @Model.Instructions.PlateauMaxX × @Model.Instructions.PlateauMaxY</p>
+        <div class="results-container border border-secondary rounded">
+            <table class="table table-dark table-sm table-bordered table-striped mb-0 text-center">
+                <thead>
+                    <tr>
+                        <th class="small">#</th>
+                        <th class="small">Commands</th>
+                        <th class="small">Start</th>
+                        <th class="small">End</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (int i = 0; i < Model.FinalPositions.Count; i++)
+                    {
+                        <tr>
+                            <td>@(i + 1)</td>
+                            <td class="text-break text-truncate">@Model.Instructions.Rovers[i].Commands</td>
+                            <td>@Model.Instructions.Rovers[i].StartingPosition.X @Model.Instructions.Rovers[i].StartingPosition.Y @Model.Instructions.Rovers[i].StartingPosition.Direction</td>
+                            <td>@Model.FinalPositions[i]</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <div class="mt-auto">
+            <span class="text-muted small">FINAL COORDINATES</span>
+            <div class="border border-secondary rounded p-2 mt-2 text-center">
+                <span class="text-warning">@String.Join(" | ", Model.FinalPositions) </span>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-7 px-4">
+        <span class="text-muted">VISUALIZATION</span>
+        <div class="visualization-container d-flex align-items-center justify-content-center border border-secondary rounded mt-2">
+            <span class="text-muted">Plateau Grid Placeholder</span>
+        </div>
+    </div>
+</div>
+
+<div class="d-flex gap-3 justify-content-end mt-4 pt-3 border-top border-secondary">
+    <a asp-controller="Simulation" asp-action="Index" class="btn btn-outline-light rounded-pill px-4">New Simulation</a>
+    <button type="button" class="btn btn-success rounded-pill px-4" disabled>Save Screenshot</button>
+</div>

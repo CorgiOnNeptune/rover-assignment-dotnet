@@ -42,9 +42,21 @@ namespace Rover.Web.Controllers
             return await SubmitSimulation(model);
         }
 
-        public IActionResult Result(int id)
+        public async Task<IActionResult> Result(int id)
         {
-            return View();
+            HttpClient client = httpClientFactory.CreateClient("RoverAPI");
+            HttpResponseMessage response = await client.GetAsync($"api/simulations/{id}");
+
+            if (!response.IsSuccessStatusCode)
+                return RedirectToAction(nameof(Index));
+
+            string json = await response.Content.ReadAsStringAsync();
+            Simulation? simulation = JsonSerializer.Deserialize<Simulation>(json, _jsonOptions);
+
+            if (simulation == null)
+                return RedirectToAction(nameof(Index));
+
+            return View(simulation);
         }
 
         public IActionResult History()

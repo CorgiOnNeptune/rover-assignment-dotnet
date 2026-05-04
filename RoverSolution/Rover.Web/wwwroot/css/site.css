@@ -65,3 +65,14 @@ label {
     height: 60vh;
 }
 
+.results-container {
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    max-height: 50vh;
+    height: 50vh;
+}
+
+.visualization-container {
+    height: 65vh;
+}
+
