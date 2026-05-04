@@ -14,6 +14,8 @@ namespace Rover.Core.Models
         public string FinalPositionsRaw { get; set; } = string.Empty;
         public List<List<Position>> PositionHistory { get; set; } = [];
 
+        public string? Screenshot { get; set; } = "";
+
         public Simulation(SimulationRequest instructions, List<string> finalPositions, List<List<Position>> positionHistory)
         {
             Instructions = instructions;
