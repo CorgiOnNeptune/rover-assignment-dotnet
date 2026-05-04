@@ -1,3 +1,4 @@
+﻿@using Rover.Core.Enums
 ﻿@model SimulationIndexViewModel
 @{
     ViewData["Title"] = "Rover Simulation";
@@ -52,7 +53,7 @@
                     <div class="col-4">
                         <!-- TODO: Dropdown for North,South,East,West -->
                         <label class="form-label small">Heading</label>
-                        <input class="form-control form-control-sm" />
+                                <select asp-for="@Model.Rovers[i].Direction" asp-items="Html.GetEnumSelectList<Direction>()" class="form-select form-select-sm"></select>
                     </div>
                 </div>
                 <!-- TODO: If time add new row of buttons here to Click for "Turn Left, Turn Right, Move Forward" -->
