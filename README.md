@@ -37,6 +37,11 @@ dotnet dev-certs https --trust
 # run the Web and Api projects
 dotnet run --project Rover.Api & dotnet run --project Rover.Web
 
+# If on Windows will have to run them from separate terminals
+dotnet run --project Rover.Api
+
+dotnet run --project Rover.Web
+
 # If having issues with SSL while running localhost:
 dotnet dev-certs https --trust
 ```
@@ -56,11 +61,10 @@ cd RoverSolution
 dotnet test
 ```
 
-Screenshot note
-The screenshot doesn't have a way to view on the frontend.
+Screenshot note: 
+There isn't functionality to view the screenshot on the frontend.
 It does get saved in `RoverSolution/Rover.Api/Data/simulations.json` under the screenshot property.
-
-You can view the image by decoding the base64 via a tool [like this](https://jaredwinick.github.io/base64-image-viewer/?ref=tiny-helpers).
+You can view the image by decoding the base64 via a decoder tool [like this](https://jaredwinick.github.io/base64-image-viewer/?ref=tiny-helpers).
 
 ## My Initial Thoughts and Plan
 
@@ -88,6 +92,7 @@ I'm approaching this with a sort of hybrid/simplified Command design pattern aft
          - Either this or the next endpoint will handle saving to JSON.
        - POST `/api/simulations/{simulationId}/screenshot`
          - This will need to include image binary and base64 to "upload" the image to the web service and create the actual object in the `Data/simulations.json`
+         - Just gets passed as a string of base64 for the image data
          - 201 Created
        - GET `/api/simulations`
        - GET `/api/simulations/{simulationId}`
@@ -118,16 +123,17 @@ I'm approaching this with a sort of hybrid/simplified Command design pattern aft
 
 ### Frontend
 
-This was my first time working with ASP.NET MVC (MVC specifically). So there was a decent learning curve, though many of the practices were still similar to other frameworks used before, just some different syntax.
+This was my first time actually working with ASP.NET MVC (MVC specifically). So there was a decent learning curve, though many of the practices were still similar to other frameworks used before, just some different syntax.
 
 I started by drawing some mockups with Excalidraw and then trying to build them out using mostly flexbox in the frontend with Bootstrap utility classes. I ended up shifting smaller pieces of the final design quite a bit. But generally lines up.
 
 ![alt text](docs/sim.png)
 ![alt text](docs/result.png)
 
-Getting the grid visual working was definitely a struggle at first, but I took inspiration from web games using grids. Particularly the dungeon system in an open-source project called [Pokeclicker](https://github.com/pokeclicker/pokeclicker). As well as more simple web-based games created with html tables such as tic tac toe.
+Getting the grid visual working was definitely a struggle at first, but I took inspiration from web games using grids. Particularly the dungeon system in an open-source project called [Pokeclicker](https://github.com/pokeclicker/pokeclicker). As well as more simple web-based games created with looped html tables to create grids, such as tic tac toe.
 
 #### Approach Order
+Some of this didn't get implemented or was me scope-creeping myself beyond the AC.
 
 1. Solve the actual problem and build out the "simulator" first.
    - Just the core algorithm, models, and functional results.
@@ -168,7 +174,8 @@ Getting the grid visual working was definitely a struggle at first, but I took i
         └── Views
 ```
 
-#### Request Flow
+#### Initial Thought For Request Flow
+These steps also progressed to be somewhat different in final project.
 
 1. User submits simulation request through the UI
 2. UI calls the API (POST `/api/simulation`)
@@ -177,4 +184,4 @@ Getting the grid visual working was definitely a struggle at first, but I took i
 5. A different service also saves initial results (separation of concerns here)
 6. API returns response (Final positions and resultId at least)
 7. UI renders the visualization
-8. UI sends a screenshot back through the API (PUT or PATCH `/api/results/{resultId}`... This is PUT/PATCH so the result in history gets updated with the screenshot path.)
+8. UI sends a screenshot back through the API (`/api/results/{resultId}`...)
