@@ -105,6 +105,5 @@ namespace Rover.Web.Controllers
             }
             return 0;
         }
-        }
     }
 }
