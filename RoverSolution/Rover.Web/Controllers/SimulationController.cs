@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Rover.Core.Enums;
 using Rover.Core.Models;
 using Rover.Web.Models;
 using System.Diagnostics;
