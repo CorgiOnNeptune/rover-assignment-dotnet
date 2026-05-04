@@ -1,28 +1,28 @@
 html {
-  font-size: 16px;
+    font-size: 16px;
 }
 
 .btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
-  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+    box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
 }
 
 html {
-  position: relative;
-  min-height: 100%;
+    position: relative;
+    min-height: 100%;
 }
 
 body {
-  margin-bottom: 60px;
-  font-family: "Space Mono", monospace;
+    margin-bottom: 60px;
+    font-family: "Space Mono", monospace;
 }
 
 .form-floating > .form-control-plaintext::placeholder, .form-floating > .form-control::placeholder {
-  color: var(--bs-secondary-color);
-  text-align: end;
+    color: var(--bs-secondary-color);
+    text-align: end;
 }
 
 .form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
-  text-align: start;
+    text-align: start;
 }
 
 .space-mono-regular {
@@ -65,3 +65,60 @@ label {
     height: 60vh;
 }
 
+.results-container {
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    max-height: 50vh;
+    height: 50vh;
+}
+
+/* Plateau styles and cells */
+.plateau-container {
+    height: 65vh;
+}
+
+.plateau-container {
+    display: flex;
+    min-height: 50vh;
+}
+
+.plateau-inner {
+    margin: auto;
+    width: fit-content;
+}
+
+.plateau-cell {
+    width: 22px;
+    height: 22px;
+    min-width: 22px;
+    min-height: 22px;
+    text-align: center;
+    border: 1px solid var(--bs-border-color);
+    font-size: 0.65rem;
+    color: var(--bs-secondary-color);
+}
+
+.plateau-starting-cell {
+    background-color: #22c55e;
+    color: white;
+}
+
+.plateau-path-cell {
+    background-color: #4b5563;
+    color: white;
+}
+
+.plateau-ending-cell {
+    background-color: #ef4444;
+    color: white;
+}
+
+.plateau-ouroboros-cell {
+    background: linear-gradient(to bottom right, #22c55e 50%, #ef4444 50%);
+    color: white;
+}
+
+.plateau-legend {
+    height: 14px;
+    border-radius: 2px;
+}

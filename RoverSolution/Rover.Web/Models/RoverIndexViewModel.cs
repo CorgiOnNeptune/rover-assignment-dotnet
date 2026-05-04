@@ -7,11 +7,11 @@ namespace Rover.Web.Models
     public class RoverIndexViewModel
     {
         [Required(ErrorMessage = "Starting X-Axis Required")]
-        [Range(0, 25, ErrorMessage = "Amount needs to be between 0 and 25.")]
+        [Range(0, int.MaxValue, ErrorMessage = "Starting axis can't be negative.")]
         public int StartingX { get; set; }
 
         [Required(ErrorMessage = "Starting Y-Axis Required")]
-        [Range(0, 25, ErrorMessage = "Amount needs to be between 0 and 25.")]
+        [Range(0, int.MaxValue, ErrorMessage = "Starting axis can't be negative.")]
         public int StartingY { get; set; }
 
         [Required(ErrorMessage = "Heading Required")]
@@ -23,7 +23,7 @@ namespace Rover.Web.Models
         public RoverRequest ToDomain()
         {
             Position startingPosition = new Position(StartingX, StartingY, Direction);
-            RoverRequest rover = new RoverRequest(startingPosition, Instructions);
+            RoverRequest rover = new RoverRequest(startingPosition, Instructions.ToUpper());
             return rover;
         }
     }
