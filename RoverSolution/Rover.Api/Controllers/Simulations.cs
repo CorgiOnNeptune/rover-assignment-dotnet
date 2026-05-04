@@ -1,4 +1,5 @@
 using Microsoft.AspNetCore.Mvc;
+using Rover.Api.Services;
 using Rover.Core.Models;
 using Rover.Core.Services;
 
@@ -7,14 +8,15 @@ namespace Rover.Api.Controllers
 
     [ApiController]
     [Route("api/[controller]")]
-    public class Simulations(SimulationService simulationService) : ControllerBase
+    public class Simulations(SimulationService simulationService, DataStoreService dataStore) : ControllerBase
     {
         private readonly SimulationService _simulationService = simulationService;
 
         [HttpPost]
-        public IActionResult Create([FromBody] SimulationRequest request)
+        public async Task<IActionResult> Create([FromBody] SimulationRequest request)
         {
             Simulation newSimulation = _simulationService.RunSimulation(request);
+            await dataStore.InsertAsync(newSimulation);
 
             return CreatedAtAction(
                 actionName: nameof(Get),
@@ -24,10 +26,11 @@ namespace Rover.Api.Controllers
         }
 
         [HttpPost("raw")]
-        public IActionResult CreateRaw([FromBody] RawSimulationRequest request)
+        public async Task<IActionResult> CreateRaw([FromBody] RawSimulationRequest request)
         {
             SimulationRequest parsedRequest = RawRequestParserService.Parse(request);
             Simulation newSimulation = _simulationService.RunSimulation(parsedRequest);
+            await dataStore.InsertAsync(newSimulation);
 
             return CreatedAtAction(
                 actionName: nameof(Get),
@@ -39,18 +42,21 @@ namespace Rover.Api.Controllers
         [HttpGet]
         public IActionResult GetAll()
         {
+            IEnumerable<Simulation>? simulations = dataStore.GetAll();
             return Ok();
         }
 
-        [HttpGet("{simulationId:guid}")]
-        public IActionResult Get(Guid simulationId)
+        [HttpGet("{simulationId:int}")]
+        public IActionResult Get(int simulationId)
         {
+            Simulation? result = dataStore.GetById(simulationId);
             return Ok();
         }
 
-        [HttpPost("{simulationId:guid}/screenshot")]
-        public IActionResult CreateScreenshot()
+        [HttpPost("{simulationId:int}/screenshot")]
+        public async Task<IActionResult> CreateScreenshot(int simulationId, [FromBody] Simulation updatedSimulation )
         {
+            await dataStore.UpdateAsync(simulationId, updatedSimulation);
             return Ok();
             //return CreatedAtAction(
             //    actionName: nameof(Get),

@@ -6,7 +6,7 @@ namespace Rover.Core.Models
 {
     public class Simulation
     {
-        public Guid Id { get; init; } = Guid.NewGuid();
+        public int Id { get; set; } = 1; // Id gets auto-incremented by JsonFlatFileDataStore package
         public DateTime RequestTime { get; init; } = DateTime.Now;
 
         public SimulationRequest Instructions { get; set; }
