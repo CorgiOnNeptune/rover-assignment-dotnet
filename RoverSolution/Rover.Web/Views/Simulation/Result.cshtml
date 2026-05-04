@@ -1,4 +1,135 @@
-﻿@{
+﻿@model Rover.Core.Models.Simulation
+@{
     ViewData["Title"] = "Simulation Result";
+    Dictionary<string, CellInfo> cellMap = (Dictionary<string, CellInfo>)ViewBag.CellMap;
 }
-<h1>@ViewData["Title"]</h1>
+
+<div class="d-flex align-items-start gap-3 mb-2">
+    <h2>Simulation #@Model.Id</h2>
+    <div>
+        <p class="text-muted small m-0">@Model.RequestTime.ToLongDateString()</p>
+        <p class="text-muted small m-0">@Model.RequestTime.ToLongTimeString()</p>
+    </div>
+</div>
+
+<div class="row">
+    <!-- Rover Table -->
+    <div class="col-5 d-flex flex-column border-end border-secondary pe-4">
+        <span class="text-muted me-2">INPUTS & OUTCOMES</span>
+        <p class="small text-light mt-2 mb-3">Plateau Upper Bounds: @Model.Instructions.PlateauMaxX × @Model.Instructions.PlateauMaxY</p>
+        <div class="results-container border border-secondary rounded">
+            <table class="table table-dark table-sm table-bordered table-striped mb-0 text-center">
+                <thead>
+                    <tr>
+                        <th class="small">#</th>
+                        <th class="small">Commands</th>
+                        <th class="small">Start</th>
+                        <th class="small">End</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (int i = 0; i < Model.FinalPositions.Count; i++)
+                    {
+                        <tr>
+                            <td>@(i + 1)</td>
+                            <td class="text-break text-truncate">@Model.Instructions.Rovers[i].Commands</td>
+                            <td>@Model.Instructions.Rovers[i].StartingPosition.X @Model.Instructions.Rovers[i].StartingPosition.Y @Model.Instructions.Rovers[i].StartingPosition.Direction</td>
+                            <td>@Model.FinalPositions[i]</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+
+        <div class="mt-auto">
+            <span class="text-muted small">FINAL COORDINATES</span>
+            <div class="border border-secondary rounded p-2 mt-2 text-center">
+                <span class="text-warning">@String.Join(" | ", Model.FinalPositions) </span>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-7 px-4">
+        <div class="d-flex align-items-center gap-3">
+            <span class="text-muted me-auto">PLATEAU</span>
+            <span class="plateau-starting-cell plateau-legend">&nbsp;</span><span class="text-muted small">Start</span>
+            <span class="plateau-path-cell plateau-legend">&nbsp;</span><span class="text-muted small">Path</span>
+            <span class="plateau-ending-cell plateau-legend">&nbsp;</span><span class="text-muted small">End</span>
+        </div>
+        <div class="plateau-container border border-secondary rounded mt-2 overflow-auto">
+            <div class="plateau-inner p-2">
+                <div class="text-end small text-muted mb-1 mt-4">@Model.Instructions.PlateauMaxX, @Model.Instructions.PlateauMaxY</div>
+                <table>
+                    @for (int y = Model.Instructions.PlateauMaxY; y >= 0; y--)
+                    {
+                        <tr>
+                            @for (int x = 0; x <= Model.Instructions.PlateauMaxX; x++)
+                            {
+                                string key = $"{x},{y}";
+                                if (cellMap.TryGetValue(key, out CellInfo? cell))
+                                {
+                                    <td class="plateau-cell @cell.CssClass">@cell.Label</td>
+                                }
+                                else
+                                {
+                                    <td class="plateau-cell">-</td>
+                                }
+                            }
+                        </tr>
+                    }
+                </table>
+                <div class="small text-muted mt-1">0, 0</div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="d-flex gap-3 justify-content-end mt-4 pt-3 border-top border-secondary">
+    <a asp-controller="Simulation" asp-action="Index" class="btn btn-outline-light rounded-pill px-4">New Simulation</a>
+    <button type="button" id="btnSaveScreenshot" data-id="@Model.Id"
+            class="btn btn-success rounded-pill px-4">Save Screenshot</button>
+</div>
+
+@section Scripts {
+    <script src="~/lib/html2canvas/dist/html2canvas.js"></script>
+    <script>
+        document.getElementById('btnSaveScreenshot').addEventListener('click', async function () {
+            const btn = this;
+            btn.disabled = true;
+            btn.textContent = 'Saving...';
+
+            try {
+                const gridEl = document.querySelector('.plateau-inner');
+                const canvas = await html2canvas(gridEl, {
+                    backgroundColor: '#212529',
+                    scale: 2,
+                });
+
+                const pngBase64 = canvas.toDataURL('image/png');
+                const simulationId = btn.getAttribute('data-id');
+
+                // Calls to the MVC Controller to then handle interacting with our API and db json
+                const response = await fetch('/Simulation/SaveScreenshot', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        simulationId: parseInt(simulationId),
+                        screenshot: pngBase64,
+                    }),
+                });
+
+                if (response.ok) {
+                    btn.textContent = 'Saved';
+                    btn.classList.replace('btn-success', 'btn-outline-success');
+                } else {
+                    btn.textContent = 'Try Again';
+                    btn.disabled = false;
+                }
+            } catch (err) {
+                console.error('Screenshot failed:', err);
+                btn.textContent = 'Try Again';
+                btn.disabled = false;
+            }
+        });
+    </script>
+}

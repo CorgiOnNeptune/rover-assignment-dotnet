@@ -1,4 +1,68 @@
-﻿@{
+﻿@using Rover.Core.Models
+@model List<Rover.Core.Models.Simulation>
+@{
     ViewData["Title"] = "Simulation History";
 }
-<h1>@ViewData["Title"]</h1>
+
+<h2 class="mb-4">Simulation History</h2>
+
+@if (Model.Count == 0)
+{
+    <p class="text-muted">No simulations have been run yet.</p>
+}
+else
+{
+    <div class="history-container border border-secondary rounded">
+        <table class="table table-dark table-sm table-bordered table-striped mb-0 text-center" style="table-layout:fixed">
+                <thead class="sticky-top">
+                <tr>
+                    <th class="small" style="width:8%">Simulation</th>
+                    <th class="small" style="width:10%">Request Time</th>
+                    <th class="small" style="width:25%">Input</th>
+                    <th class="small">Output</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (Simulation simulation in Model)
+                {
+                    <tr>
+                        <td class="align-middle">
+                            <a asp-controller="Simulation" asp-action="Result" asp-route-id="@simulation.Id" class="text-info">
+                                #@simulation.Id
+                            </a>
+                        </td>
+                        <td class="small align-middle">
+                            <p class="m-0">@simulation.RequestTime.ToLongDateString()</p>
+                            <p class="m-0">@simulation.RequestTime.ToLongTimeString()</p>
+                        </td>
+                        <td class="small text-start text-break">
+                            <span class="text-muted small">Plateau: </span>
+                            @simulation.Instructions.PlateauMaxX @simulation.Instructions.PlateauMaxY
+                            @for (int i = 0; i < simulation.Instructions.Rovers.Count; i++)
+                            {
+                                <p class="m-0 mt-1">
+                                    <span class="text-muted small">R@(i + 1): </span>
+                                    @($"{simulation.Instructions.Rovers[i].StartingPosition.X} {simulation.Instructions.Rovers[i].StartingPosition.Y} {simulation.Instructions.Rovers[i].StartingPosition.Direction}")
+                                </p>
+                                <p class="m-0">@simulation.Instructions.Rovers[i].Commands</p>
+                            }
+                        </td>
+                        <td class="small text-warning text-start text-break">
+                            @for (int i = 0; i < simulation.FinalPositions.Count; i++)
+                            {
+                                <p class="m-0 mt-1">
+                                    <span class="text-muted small">R@(i + 1): </span>
+                                    @simulation.FinalPositions[i]
+                                </p>
+                            }
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+}
+
+<div class="d-flex gap-3 justify-content-end mt-4 pt-3 border-top border-secondary">
+    <a asp-controller="Simulation" asp-action="Index" class="btn btn-outline-light rounded-pill px-4">New Simulation</a>
+</div>

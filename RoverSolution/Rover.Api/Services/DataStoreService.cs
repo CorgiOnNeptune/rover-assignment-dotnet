@@ -28,9 +28,9 @@ namespace Rover.Api.Services
             return Simulations.Find(_ => true).OrderByDescending(s => s.RequestTime).ToList();
         }
 
-        public Task<bool> UpdateAsync(int id, Simulation simulation)
+        public Task<bool> UpdateScreenshotAsync(int id, string screenshot)
         {
-            return Simulations.UpdateOneAsync(id, simulation);
+            return Simulations.UpdateOneAsync(id, new { Screenshot = screenshot });
         }
     }
 }
