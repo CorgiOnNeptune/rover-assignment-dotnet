@@ -56,6 +56,7 @@ namespace Rover.Web.Controllers
             if (simulation == null)
                 return RedirectToAction(nameof(Index));
 
+            ViewBag.CellMap = BuildCellMap(simulation);
             return View(simulation);
         }
 
@@ -104,6 +105,50 @@ namespace Rover.Web.Controllers
 
             int simulationId = GetSimulationId(response);
             return RedirectToAction(nameof(Result), new { id = simulationId });
+        }
+
+        /// <summary>
+        /// Takes the PositionHistory from a Simulation and turns it into a map to build the plateau table.
+        /// Builds dict of keys using the "x,y" position and maps to which rover.
+        /// First writes the path-cells based on all of the Position History.
+        /// Then overwrites the path-cell for the First and Last position in history for appropriate styling.
+        /// </summary>
+        private static Dictionary<string, CellInfo> BuildCellMap(Simulation simulation)
+        {
+            Dictionary<string, CellInfo> cellMap = new Dictionary<string, CellInfo>();
+
+            for (int i = 0; i < simulation.PositionHistory.Count; i++)
+            {
+                List<Position> history = simulation.PositionHistory[i];
+                string roverIndex = Convert.ToString(i + 1);
+
+                foreach (Position position in history)
+                {
+                    string key = $"{position.X},{position.Y}";
+                    cellMap[key] = CellInfo.CreatePathCell(roverIndex);
+                }
+
+                if (history.Count > 0)
+                {
+                    Position start = history.First();
+                    string startKey = $"{start.X},{start.Y}";
+
+                    Position end = history.Last();
+                    string endKey = $"{end.X},{end.Y}";
+
+                    if (startKey == endKey)
+                    {
+                        cellMap[startKey] =  CellInfo.CreateStartingAndEndingCell(roverIndex);
+                    }
+                    else
+                    {
+                        cellMap[startKey] =  CellInfo.CreateStartingCell(roverIndex);
+                        cellMap[endKey] = CellInfo.CreateEndingCell(roverIndex);
+                    }
+                }
+            }
+
+            return cellMap;
         }
 
         private static int GetSimulationId(HttpResponseMessage response)

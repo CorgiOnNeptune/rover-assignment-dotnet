@@ -1,13 +1,14 @@
 ﻿@model Rover.Core.Models.Simulation
 @{
     ViewData["Title"] = "Simulation Result";
+    Dictionary<string, CellInfo> cellMap = (Dictionary<string, CellInfo>)ViewBag.CellMap;
 }
 
 <div class="d-flex align-items-start gap-3 mb-2">
     <h2>Simulation #@Model.Id</h2>
     <div>
-        <span class="text-muted small">@Model.RequestTime.ToLongDateString()</span><br />
-        <span class="text-muted small">@Model.RequestTime.ToLongTimeString()</span>
+        <p class="text-muted small m-0">@Model.RequestTime.ToLongDateString()</p>
+        <p class="text-muted small m-0">@Model.RequestTime.ToLongTimeString()</p>
     </div>
 </div>
 
@@ -49,9 +50,36 @@
     </div>
 
     <div class="col-7 px-4">
-        <span class="text-muted">VISUALIZATION</span>
-        <div class="visualization-container d-flex align-items-center justify-content-center border border-secondary rounded mt-2">
-            <span class="text-muted">Plateau Grid Placeholder</span>
+        <div class="d-flex align-items-center gap-3">
+            <span class="text-muted me-auto">PLATEAU</span>
+            <span class="plateau-starting-cell plateau-legend">&nbsp;</span><span class="text-muted small">Start</span>
+            <span class="plateau-path-cell plateau-legend">&nbsp;</span><span class="text-muted small">Path</span>
+            <span class="plateau-ending-cell plateau-legend">&nbsp;</span><span class="text-muted small">End</span>
+        </div>
+        <div class="plateau-container border border-secondary rounded mt-2 overflow-auto">
+            <div class="plateau-inner p-2">
+                <div class="text-end small text-muted mb-1 mt-4">@Model.Instructions.PlateauMaxX, @Model.Instructions.PlateauMaxY</div>
+                <table>
+                    @for (int y = Model.Instructions.PlateauMaxY; y >= 0; y--)
+                    {
+                        <tr>
+                            @for (int x = 0; x <= Model.Instructions.PlateauMaxX; x++)
+                            {
+                                string key = $"{x},{y}";
+                                if (cellMap.TryGetValue(key, out CellInfo? cell))
+                                {
+                                    <td class="plateau-cell @cell.CssClass">@cell.Label</td>
+                                }
+                                else
+                                {
+                                    <td class="plateau-cell">-</td>
+                                }
+                            }
+                        </tr>
+                    }
+                </table>
+                <div class="small text-muted mt-1">0, 0</div>
+            </div>
         </div>
     </div>
 </div>
