@@ -1,0 +1,15 @@
+[
+  {
+    "Name": "Web + API",
+    "Projects": [
+      {
+        "Path": "Rover.Api\\Rover.Api.csproj",
+        "Action": "Start"
+      },
+      {
+        "Path": "Rover.Web\\Rover.Web.csproj",
+        "Action": "Start"
+      }
+    ]
+  }
+]
