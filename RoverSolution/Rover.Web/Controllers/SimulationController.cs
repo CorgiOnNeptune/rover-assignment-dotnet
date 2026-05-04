@@ -36,6 +36,9 @@ namespace Rover.Web.Controllers
             if (submit != null && submit.StartsWith("remove:"))
                 return RemoveRover(model, submit);
 
+            if (submit == "lucky")
+                return await SubmitRandomSimulation();
+
             if (!ModelState.IsValid)
                 return View(model);
 
@@ -105,6 +108,43 @@ namespace Rover.Web.Controllers
             }
             return 0;
         }
+
+        private async Task<IActionResult> SubmitRandomSimulation()
+        {
+            Random rng = new Random();
+
+            int plateauMaxX = rng.Next(1, 26);
+            int plateauMaxY = rng.Next(1, 26);
+            int roverCount = rng.Next(1, 11);
+
+            Direction[] directions = Enum.GetValues<Direction>();
+            char[] commands = ['L', 'M', 'R'];
+
+            List<RoverRequest> rovers = Enumerable.Range(0, roverCount).Select(_ =>
+            {
+                int commandLength = rng.Next(1, 21);
+                string instructions = new(Enumerable.Range(0, commandLength)
+                    .Select(_ => commands[rng.Next(commands.Length)]).ToArray());
+
+                return new RoverRequest(
+                    new Position(rng.Next(0, plateauMaxX + 1), rng.Next(0, plateauMaxY + 1), directions[rng.Next(directions.Length)]),
+                    instructions
+                );
+            }).ToList();
+
+            SimulationRequest request = new SimulationRequest(plateauMaxX, plateauMaxY, rovers);
+
+            HttpClient client = httpClientFactory.CreateClient("RoverAPI");
+            string json = JsonSerializer.Serialize(request, _jsonOptions);
+            StringContent content = new StringContent(json, Encoding.UTF8, "application/json");
+
+            HttpResponseMessage response = await client.PostAsync("api/simulations", content);
+
+            if (!response.IsSuccessStatusCode)
+                return RedirectToAction(nameof(Index));
+
+            int simulationId = GetSimulationId(response);
+            return RedirectToAction(nameof(Result), new { id = simulationId });
         }
     }
 }
