@@ -65,3 +65,9 @@ label {
     height: 60vh;
 }
 
+.history-container {
+    overflow-y: auto;
+    overscroll-behavior: contain;
+    max-height: 70vh;
+    height: 70vh;
+}
