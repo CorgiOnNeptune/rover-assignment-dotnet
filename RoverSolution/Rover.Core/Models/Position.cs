@@ -1,5 +1,4 @@
 ﻿using Rover.Core.Enums;
-using System.Text.Json.Serialization;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -12,7 +11,6 @@ namespace Rover.Core.Models
         public int Y { get; set; }
         public Direction Direction { get; set; }
 
-        [JsonConstructor]
         public Position(int x, int y, Direction direction)
         {
             X = x;
@@ -26,6 +24,8 @@ namespace Rover.Core.Models
             Y = position.Y;
             Direction = position.Direction;
         }
+
+        public Position() { }
 
         /// <summary>
         /// Check that the given position isn't negative on either axis and within the range of the given plateau.
