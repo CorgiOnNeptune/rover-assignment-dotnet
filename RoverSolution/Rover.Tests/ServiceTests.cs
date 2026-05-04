@@ -40,8 +40,8 @@ MMRMMRMRRMLMRMMMMMMRRRRLLLLMMMMMMMLMMMMRMMMM" };
     [Fact]
     public void RawRequestParserService_LargeInput_ShouldEqualExpected()
     {
-        RoverRequest expectedRoverOne = new(new Position(10, 20, Direction.N), "LMLMLMLMM");
-        RoverRequest expectedRoverTwo = new(new Position(30, 30, Direction.E), "MMRMMRMRRM");
+        RoverRequest expectedRoverOne = new(new Position(10, 20, Direction.N), "LMLMLMLMMMRMLMRMRMRMRMLMLMLMLMMMM");
+        RoverRequest expectedRoverTwo = new(new Position(30, 30, Direction.E), "MMRMMRMRRMLMRMMMMMMRRRRLLLLMMMMMMMLMMMMRMMMM");
         List<RoverRequest> expectedRovers = [expectedRoverOne, expectedRoverTwo];
 
         SimulationRequest expectedObject = new(100, 100, expectedRovers);
