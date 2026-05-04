@@ -4,8 +4,15 @@ using System.Diagnostics;
 
 namespace Rover.Web.Controllers
 {
-    public class SimulationController : Controller
+    public class SimulationController(IHttpClientFactory httpClientFactory) : Controller
     {
+        // This is handling issues I was running into with the API and the Direction enum..
+        private static readonly JsonSerializerOptions _jsonOptions = new()
+        {
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+            Converters = { new JsonStringEnumConverter() }
+        };
+
         public IActionResult Index()
         {
             return View();

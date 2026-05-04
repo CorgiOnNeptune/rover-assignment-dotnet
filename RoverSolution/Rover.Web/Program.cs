@@ -1,7 +1,15 @@
+using System.Net.Http.Headers;
+
 WebApplicationBuilder builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 builder.Services.AddControllersWithViews().AddRazorRuntimeCompilation();
+
+builder.Services.AddHttpClient("RoverAPI", client =>
+{
+    client.BaseAddress = new Uri("https://localhost:7081");
+    client.DefaultRequestHeaders.Accept.Add(new MediaTypeWithQualityHeaderValue("application/json"));
+});
 
 WebApplication app = builder.Build();
 

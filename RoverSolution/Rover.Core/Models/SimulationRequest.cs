@@ -20,6 +20,6 @@ namespace Rover.Core.Models
 
     public class RawSimulationRequest
     {
-        public string Input { get; set; }
+        public string Input { get; set; } = string.Empty;
     }
 }
