@@ -113,16 +113,16 @@ namespace Rover.Web.Controllers
         {
             Random rng = new Random();
 
-            int plateauMaxX = rng.Next(1, 26);
-            int plateauMaxY = rng.Next(1, 26);
-            int roverCount = rng.Next(1, 11);
+            int plateauMaxX = rng.Next(1, 100);
+            int plateauMaxY = rng.Next(1, 100);
+            int roverCount = rng.Next(1, 30);
 
             Direction[] directions = Enum.GetValues<Direction>();
             char[] commands = ['L', 'M', 'R'];
 
             List<RoverRequest> rovers = Enumerable.Range(0, roverCount).Select(_ =>
             {
-                int commandLength = rng.Next(1, 21);
+                int commandLength = rng.Next(1, 30);
                 string instructions = new(Enumerable.Range(0, commandLength)
                     .Select(_ => commands[rng.Next(commands.Length)]).ToArray());
 
