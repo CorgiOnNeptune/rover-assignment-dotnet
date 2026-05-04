@@ -1,6 +1,11 @@
 using Microsoft.AspNetCore.Mvc;
+using Rover.Core.Enums;
+using Rover.Core.Models;
 using Rover.Web.Models;
 using System.Diagnostics;
+using System.Text;
+using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace Rover.Web.Controllers
 {
@@ -15,7 +20,26 @@ namespace Rover.Web.Controllers
 
         public IActionResult Index()
         {
-            return View();
+            SimulationIndexViewModel simulation = new SimulationIndexViewModel
+            {
+                Rovers = new List<RoverIndexViewModel> { new RoverIndexViewModel() }
+            };
+            return View(simulation);
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> Index(SimulationIndexViewModel model, string? submit)
+        {
+            if (submit == "add-rover")
+                return AddRover(model);
+
+            if (submit != null && submit.StartsWith("remove:"))
+                return RemoveRover(model, submit);
+
+            if (!ModelState.IsValid)
+                return View(model);
+
+            return await SubmitSimulation(model);
         }
 
         public IActionResult Result(int id)
@@ -32,6 +56,55 @@ namespace Rover.Web.Controllers
         public IActionResult Error()
         {
             return View(new ErrorViewModel { RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier });
+        }
+
+        private ViewResult AddRover(SimulationIndexViewModel model)
+        {
+            ModelState.Clear();
+            model.Rovers.Add(new RoverIndexViewModel());
+            return View(model);
+        }
+
+        private ViewResult RemoveRover(SimulationIndexViewModel model, string submit)
+        {
+            int index = int.Parse(submit.Split(':')[1]);
+            if (model.Rovers.Count > 1)
+                model.Rovers.RemoveAt(index);
+
+            ModelState.Clear();
+            return View(model);
+        }
+
+        private async Task<IActionResult> SubmitSimulation(SimulationIndexViewModel model)
+        {
+            HttpClient client = httpClientFactory.CreateClient("RoverAPI");
+
+            List<RoverRequest> rovers = model.Rovers.Select(r => r.ToDomain()).ToList();
+            SimulationRequest simulationRequest = new SimulationRequest(model.PlateauMaxX, model.PlateauMaxY, rovers);
+
+            string json = JsonSerializer.Serialize(simulationRequest, _jsonOptions);
+            StringContent content = new StringContent(json, Encoding.UTF8, "application/json");
+
+            HttpResponseMessage response = await client.PostAsync("api/simulations", content);
+
+            if (!response.IsSuccessStatusCode)
+                return View(model);
+
+            int simulationId = GetSimulationId(response);
+            return RedirectToAction(nameof(Result), new { id = simulationId });
+        }
+
+        private static int GetSimulationId(HttpResponseMessage response)
+        {
+            string? location = response.Headers.Location?.ToString();
+            if (location != null)
+            {
+                string lastSegment = location.Split('/').Last();
+                if (int.TryParse(lastSegment, out int id))
+                    return id;
+            }
+            return 0;
+        }
         }
     }
 }
