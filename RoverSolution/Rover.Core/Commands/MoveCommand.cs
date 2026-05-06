@@ -8,7 +8,7 @@ namespace Rover.Core.Commands
 {
     internal class MoveCommand : IRoverCommand
     {
-        public override void Execute(MarsRover rover, Plateau plateau)
+        public void Execute(MarsRover rover, Plateau plateau)
         {
             Position newPosition = new Position(rover.Position);
 

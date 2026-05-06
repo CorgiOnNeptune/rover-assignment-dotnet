@@ -8,7 +8,7 @@ namespace Rover.Core.Commands
 {
     internal class RotateLeftCommand : IRoverCommand
     {
-        public override void Execute(MarsRover rover, Plateau plateau)
+        public void Execute(MarsRover rover, Plateau plateau)
         {
             Position pos = rover.Position;
             Position newPos = new Position(pos.X, pos.Y, Utils.TurnCounterClockwise(pos.Direction));
