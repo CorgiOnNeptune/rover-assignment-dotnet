@@ -47,8 +47,8 @@ namespace Rover.Web.Controllers
 
         public async Task<IActionResult> Result(int id)
         {
-            HttpClient client = httpClientFactory.CreateClient("RoverAPI");
-            HttpResponseMessage response = await client.GetAsync($"api/simulations/{id}");
+            using HttpClient client = httpClientFactory.CreateClient("RoverAPI");
+            using HttpResponseMessage response = await client.GetAsync($"api/simulations/{id}");
 
             if (!response.IsSuccessStatusCode)
                 return RedirectToAction(nameof(Index));
@@ -65,8 +65,8 @@ namespace Rover.Web.Controllers
 
         public async Task<IActionResult> History()
         {
-            HttpClient client = httpClientFactory.CreateClient("RoverAPI");
-            HttpResponseMessage response = await client.GetAsync("api/simulations");
+            using HttpClient client = httpClientFactory.CreateClient("RoverAPI");
+            using HttpResponseMessage response = await client.GetAsync("api/simulations");
 
             List<Simulation> simulations = new List<Simulation>();
 
@@ -105,12 +105,12 @@ namespace Rover.Web.Controllers
         [HttpPost]
         public async Task<IActionResult> SaveScreenshot([FromBody] ScreenshotRequest request)
         {
-            HttpClient client = httpClientFactory.CreateClient("RoverAPI");
+            using HttpClient client = httpClientFactory.CreateClient("RoverAPI");
 
             string json = JsonSerializer.Serialize(request.Screenshot);
-            StringContent content = new StringContent(json, Encoding.UTF8, "application/json");
+            using StringContent content = new StringContent(json, Encoding.UTF8, "application/json");
 
-            HttpResponseMessage response = await client.PostAsync(
+            using HttpResponseMessage response = await client.PostAsync(
                 $"api/simulations/{request.SimulationId}/screenshot", content);
 
             if (!response.IsSuccessStatusCode)
@@ -121,15 +121,15 @@ namespace Rover.Web.Controllers
 
         private async Task<IActionResult> SubmitSimulation(SimulationIndexViewModel model)
         {
-            HttpClient client = httpClientFactory.CreateClient("RoverAPI");
+            using HttpClient client = httpClientFactory.CreateClient("RoverAPI");
 
             List<RoverRequest> rovers = model.Rovers.Select(r => r.ToDomain()).ToList();
             SimulationRequest simulationRequest = new SimulationRequest(model.PlateauMaxX, model.PlateauMaxY, rovers);
 
             string json = JsonSerializer.Serialize(simulationRequest, _jsonOptions);
-            StringContent content = new StringContent(json, Encoding.UTF8, "application/json");
+            using StringContent content = new StringContent(json, Encoding.UTF8, "application/json");
 
-            HttpResponseMessage response = await client.PostAsync("api/simulations", content);
+            using HttpResponseMessage response = await client.PostAsync("api/simulations", content);
 
             if (!response.IsSuccessStatusCode)
                 return View(model);
@@ -219,11 +219,11 @@ namespace Rover.Web.Controllers
 
             SimulationRequest request = new SimulationRequest(plateauMaxX, plateauMaxY, rovers);
 
-            HttpClient client = httpClientFactory.CreateClient("RoverAPI");
+            using HttpClient client = httpClientFactory.CreateClient("RoverAPI");
             string json = JsonSerializer.Serialize(request, _jsonOptions);
-            StringContent content = new StringContent(json, Encoding.UTF8, "application/json");
+            using StringContent content = new StringContent(json, Encoding.UTF8, "application/json");
 
-            HttpResponseMessage response = await client.PostAsync("api/simulations", content);
+            using HttpResponseMessage response = await client.PostAsync("api/simulations", content);
 
             if (!response.IsSuccessStatusCode)
                 return RedirectToAction(nameof(Index));
