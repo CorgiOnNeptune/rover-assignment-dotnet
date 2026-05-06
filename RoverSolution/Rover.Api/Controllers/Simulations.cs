@@ -11,12 +11,13 @@ namespace Rover.Api.Controllers
     public class Simulations(SimulationService simulationService, DataStoreService dataStore) : ControllerBase
     {
         private readonly SimulationService _simulationService = simulationService;
+        private readonly DataStoreService _dataStore = dataStore;
 
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] SimulationRequest request)
         {
             Simulation newSimulation = _simulationService.RunSimulation(request);
-            await dataStore.InsertAsync(newSimulation);
+            await _dataStore.InsertAsync(newSimulation);
 
             return CreatedAtAction(
                 actionName: nameof(Get),
@@ -30,7 +31,7 @@ namespace Rover.Api.Controllers
         {
             SimulationRequest parsedRequest = RawRequestParserService.Parse(request);
             Simulation newSimulation = _simulationService.RunSimulation(parsedRequest);
-            await dataStore.InsertAsync(newSimulation);
+            await _dataStore.InsertAsync(newSimulation);
 
             return CreatedAtAction(
                 actionName: nameof(Get),
@@ -42,26 +43,26 @@ namespace Rover.Api.Controllers
         [HttpGet]
         public IActionResult GetAll()
         {
-            IEnumerable<Simulation>? simulations = dataStore.GetAll();
+            IEnumerable<Simulation>? simulations = _dataStore.GetAll();
             return Ok(simulations);
         }
 
         [HttpGet("{simulationId:int}")]
         public IActionResult Get(int simulationId)
         {
-            Simulation? simulation = dataStore.GetById(simulationId);
+            Simulation? simulation = _dataStore.GetById(simulationId);
             return simulation == null ? NotFound() : Ok(simulation);
         }
 
         [HttpPost("{simulationId:int}/screenshot")]
         public async Task<IActionResult> CreateScreenshot(int simulationId, [FromBody] string screenshot)
         {
-            Simulation? simulation = dataStore.GetById(simulationId);
+            Simulation? simulation = _dataStore.GetById(simulationId);
 
             if (simulation == null)
                 return BadRequest();
 
-            await dataStore.UpdateScreenshotAsync(simulationId, screenshot);
+            await _dataStore.UpdateScreenshotAsync(simulationId, screenshot);
             return Ok();
         }
     }
