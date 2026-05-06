@@ -23,12 +23,6 @@ cd RoverSolution
 
 dotnet restore
 dotnet build
-
-# run the Web and Api projects
-dotnet run --project Rover.Api & dotnet run --project Rover.Web
-
-# If having issues with SSL running localhost:
-dotnet dev-certs https --trust
 ```
 
 3. Run project
